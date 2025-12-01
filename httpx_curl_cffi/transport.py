@@ -350,7 +350,10 @@ class BaseCurlTransport(Generic[SessionT]):
 
         # `response.elapsed` will be updated by `httpx.Client` one more time
         # when stream will be closed
-        resp.elapsed = timedelta(seconds=_resp.elapsed)
+        if isinstance(_resp.elapsed, timedelta):
+            resp.elapsed = _resp.elapsed
+        else:
+            resp.elapsed = timedelta(seconds=_resp.elapsed)
         return resp
 
     def _create_error(
